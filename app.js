@@ -1,46 +1,23 @@
-//passa uma informacao do express para a constante express
+
 const express = require('express')
-//passa uma informação do express para a constante app
+const userRepository = require('./repositories/users')
 const app = express()
-//numeração da porta de entrada da constante
 const port = 3000
+//
 app.use(express.json());
 
-//informações que ficaram amarzenadas no banco de dados
-let bd = [
 
-  //informações sobre os nomes dos users
-  { 
-    id: "1", //identificação do primeiro user
-    name: "Felippe" //nome do primeiro user
-  },
-  {
-    id: "2", //identificação do segundo user
-    name: "Bruna" //nome do segundo user
-  }
-]
-
-   //get users
-   //coleta as informações dos users e as monitora
    app.get('/users', (request, response) => {
-   response.json(bd);
+   response.json(userRepository.getUsers());
    })
 
      app.get('/users/:id',(request, response) => {
 
-     //pegar o id da requisicao  
-     //pega o id solicitado e passa sua informação
      const idUser = request.params.id;
-
- //encontrar o usuario correspondente no bd
- // é responsavel por encontrar o user solicitado no banco de dados, caso ele estiver registrado
- const user = bd.filter((usuario) => usuario.id === idUser);
-
- //respoder a requisicao com as info dos users
- response.json(user);
+ response.json(userRepository.getUsersById(idUser));
  
  })
-
+//ele roteia o http para um caminho espercificado com as funções de retorno dos users
 app.post("/users", (request, response) =>{
 
   //pegar o corpo da requisição
@@ -107,7 +84,7 @@ bd = bd.map((usuario) => {
 response.json(bd);
 
   })
-//listar os dados obtidos
+//listar e amazenar os dados obtidos
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`)
 })
